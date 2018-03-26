@@ -8,7 +8,7 @@
 
 const kOneDay = 24 * 60 * 60;
 const kInitialIntervals = [28 * kOneDay, 7 * kOneDay, kOneDay, 600];
-const kIntervalFactors = [3.5, 2.2, 0.9, 0.25];
+const kIntervalFactors = [2.5, 1.5, 0.7, 0.1];
 const kRandomFactor = 0.15;
 
 const getNextInterval = (item, result, last) => {
@@ -33,7 +33,7 @@ const getNextInterval = (item, result, last) => {
   }
   // Decelerate hard items that are consistently marked wrong.
   if (attempts > 8 && correct < 0.5) {
-    factor *= Math.pow(correct, 0.7);
+    factor *= Math.pow(correct, 0.5);
   }
   // Multiply by the factor, randomize the interval, and apply bounds.
   const interval = randomizeInterval(factor * intended);
