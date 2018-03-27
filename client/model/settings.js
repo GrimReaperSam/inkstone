@@ -34,6 +34,7 @@ const defaults = {
   show_regrading_icon: true,
   snap_strokes: true,
   show_pinyin: true,
+  speech: false,
 };
 
 class Settings {

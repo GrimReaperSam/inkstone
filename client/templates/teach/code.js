@@ -219,6 +219,14 @@ const onItemData = (data) => {
   helpers.set('definition', data.definition);
   helpers.set('pinyin', data.pinyin);
   helpers.set('word', data.word);
+  if (Settings.get('speech')) {
+    let msg = new SpeechSynthesisUtterance();
+    msg.text = data.traditional;
+    msg.voice = window.speechSynthesis.getVoices()._list[194];
+    msg.lang = 'zh';
+    msg.rate = 0.9;
+    window.speechSynthesis.speak(msg);
+  }
   updateItem(card, data);
 }
 
