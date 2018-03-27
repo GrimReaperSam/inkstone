@@ -18,5 +18,7 @@ popd
 
 cd $APK_DIR
 jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 project-armv7-release-unsigned.apk inkstone
-cd $BASE_DIR
 $ZIPALIGN -f 4 project-armv7-release-unsigned.apk project-armv7-release.apk
+
+cp project-armv7-release.apk $BASE_DIR
+

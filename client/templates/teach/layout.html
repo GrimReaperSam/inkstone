@@ -26,7 +26,9 @@
       <a class="control show"><i class="ion-search"></i></a>
     </div>
     <div class="prompt">
-      <div class="pinyin">{{get 'pinyin'}}</div>
+      {{#if show_pinyin}}
+        <div class="pinyin">{{get 'pinyin'}}</div>
+      {{/if}}
       <div class="definition">{{get 'definition'}}</div>
     </div>
     <div class="scroller">

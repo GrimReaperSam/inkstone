@@ -186,6 +186,9 @@ const onStroke = (stroke) => {
     $(window).trigger('makemeahanzi-character-complete');
     task.result = getResult(task.penalties);
     handwriting.glow(task.result);
+    if (item.index === item.tasks.length - 1) {
+      helpers.set('show_pinyin', true);
+    }
   } else if (task.missing[0] < index) {
     task.penalties += 2 * (index - task.missing[0]);
     handwriting.flash(task.strokes[task.missing[0]]);
@@ -372,6 +375,9 @@ Template.teach.helpers({
   show_regrading_icon: () => {
     return Settings.get('show_regrading_icon') && helpers.get('complete');
   },
+  show_pinyin: () => {
+    return Settings.get('show_pinyin') || helpers.get('show_pinyin');
+    },
 });
 
 Template.teach.onRendered(onRendered);
