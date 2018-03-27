@@ -1,3 +1,4 @@
 cordova-plugin-file@4.3.1
 cordova-plugin-inappbrowser@1.6.1
 cordova-plugin-meteor-webapp@1.4.1
+phonegap-plugin-speech-synthesis@0.1.1
