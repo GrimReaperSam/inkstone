@@ -29,6 +29,7 @@ import {Matcher} from '/lib/matcher/matcher';
 
 let element = null;
 let handwriting = null;
+let computation = null;
 
 const kMaxMistakes = 3;
 const kMaxPenalties  = 4;
@@ -123,6 +124,7 @@ const onRendered = function() {
   const options = {onclick: onClick, ondouble: onDouble, onstroke: onStroke};
   element = $(this.firstNode).find('.flashcard');
   handwriting = new Handwriting(element, options);
+  computation = Tracker.autorun(updateCard);
 }
 
 const onRequestRegrade = (stroke) => {
@@ -219,15 +221,24 @@ const onItemData = (data) => {
   helpers.set('definition', data.definition);
   helpers.set('pinyin', data.pinyin);
   helpers.set('word', data.word);
-  if (Settings.get('speech')) {
-    let msg = new SpeechSynthesisUtterance();
-    msg.text = data.traditional;
-    msg.voice = window.speechSynthesis.getVoices()._list[194];
-    msg.lang = 'zh';
-    msg.rate = 0.9;
-    window.speechSynthesis.speak(msg);
-  }
   updateItem(card, data);
+  if (Settings.get('speech')) {
+      speak();
+  }
+}
+
+const speak = () => {
+  if (!item.card || item.card.deck === 'errors') return;
+  let msg = new SpeechSynthesisUtterance();
+  msg.text = item.card.data.word;
+  if (Meteor.isCordova) {
+      msg.voice = window.speechSynthesis.getVoices()._list[194];
+  } else {
+      msg.voice = window.speechSynthesis.getVoices()[16];
+  }
+  msg.lang = 'zh';
+  msg.rate = 0.9;
+  window.speechSynthesis.speak(msg);
 }
 
 const onNewItem = (item) => {
@@ -342,6 +353,7 @@ Template.teach.events({
       console.error('Unable to apply option:', this);
     }
   },
+  'click a.control.replay': speak,
   'click a.control.blacklist': (event) => {
     if (!item.card || item.card.deck === 'errors') return;
     maybeBlacklistWord(item.card.data.word);
@@ -349,6 +361,7 @@ Template.teach.events({
   'click a.control.home': (event) => {
     // NOTE: We have to go forward here instead of going back because the
     // answer selection page adds spurious history entries for this page.
+    computation.stop();
     Router.go('/');
     event.stopPropagation();
   },
@@ -389,5 +402,3 @@ Template.teach.helpers({
 });
 
 Template.teach.onRendered(onRendered);
-
-Tracker.autorun(updateCard);
